@@ -12,57 +12,48 @@ import AFNetworking
 
 class WeatherWebService{
     
-    func getWeatherForCoordinates(coordinateValue:CLLocationCoordinate2D, from viewController:ViewController)  {
-        let weatherModelObject = WeatherModel()
+    var weatherModelObject : WeatherModel?
+    
+    func getWeatherForCoordinates(coordinateValue : CLLocationCoordinate2D, completionHandler : @escaping (_ uiValues:[String : Any], _ error : Error?)->Void  )  {
         LATVALUE = "\(coordinateValue.latitude)"
         LONGVALUE = "\(coordinateValue.longitude)"
+        let parameters =  [
+            "lat" : LATVALUE,
+            "lon" : LONGVALUE,
+            "APPID" : APPKEY
+            
+        ]
         
-       
-        
-        let manager = AFHTTPSessionManager()
-        
-        manager.get(
-            WEATHERBASEURL,
-            parameters: [
-                "lat" : LATVALUE,
-                "lon" : LONGVALUE,
-                "APPID" : APPKEY
+        WebServiceManager().getDetailsFromURL(url: WEATHERBASEURL, withQueryParameters: parameters) { (responseDictionary, error) in
+            if (responseDictionary != nil){
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: responseDictionary as Any, options: .prettyPrinted)
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let forecast = try decoder.decode(WeatherModel.self, from: jsonData)
+                    print(forecast.name)
+                    ICONVALUE = (forecast.weather.first!.icon)
+                    self.weatherModelObject = forecast
+                    let uiValue = ["placeName" : self.weatherModelObject?.name as Any,
+                                   "temp" : self.weatherModelObject?.main.temp as Any,
+                                   "status" : self.weatherModelObject?.weather.first?.main as Any,
+                                   "description" : self.weatherModelObject?.weather.first?.description as Any
+                    ]
+                    completionHandler(uiValue,nil)
+                } catch {
+                    print("Error")
+                }
                 
-        ],
-            progress: { (Progress) in
-            
-        },
-            success: {
-                (operation, responseObject) in
-            
-                    if let responseDictionary = responseObject as? [String: Any] {
-                        print(responseDictionary)
-                        let weatherDictionary = (responseDictionary["weather"] as! [Any]).first as! [String : Any]
-                        
-                        weatherModelObject.mainValue = weatherDictionary["main"] as! String
-                        weatherModelObject.description = weatherDictionary["description"] as! String
-                        weatherModelObject.icon = weatherDictionary["icon"] as! String
-                        weatherModelObject.placeName = responseDictionary["name"] as! String
-                        
-                        let temperatureDictionary = responseDictionary["main"] as? [String : Any]
-                        
-                        weatherModelObject.maxTemp = self.convertKelvinToFahrenheit(temperature: temperatureDictionary?["temp_max"] as! Double)
-                        weatherModelObject.minTemp = self.convertKelvinToFahrenheit(temperature: temperatureDictionary?["temp_min"] as! Double)
-                        ICONVALUE = weatherModelObject.icon
-                        viewController.updateWeatherValue(weatherModelObject: weatherModelObject)
             }
-        },
-            failure: {
-                (operation, error) in
-                    print("Error: " + error.localizedDescription)
-        })
-        
-        
-        
+            else{
+                print("Error: " + error!.localizedDescription)
+            }
+            
+        }
     }
     
-    func convertKelvinToFahrenheit(temperature:Double) -> Double {
-        let fahrenheitTemp = (temperature - 273.15) * (9/5) + 32
-        return fahrenheitTemp
-    }
+    
+    
+    
+    
 }

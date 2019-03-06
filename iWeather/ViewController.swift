@@ -11,9 +11,9 @@ import CoreLocation
 import MapKit
 import SDWebImage
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-
-     let locationManager = CLLocationManager()
+class ViewController: UIViewController  {
+    
+    let locationManager = CLLocationManager()
     let newPin = MKPointAnnotation()
     @IBOutlet var weatherMapView: MKMapView!
     @IBOutlet var placeName: UILabel!
@@ -43,35 +43,42 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
     
+    func convertKelvinToFahrenheit(temperature:Double) -> Double {
+        let fahrenheitTemp = (temperature - 273.15) * (9/5) + 32
+        return fahrenheitTemp
+    }
+    
     @objc func longPressCall(_ recognizer: UIGestureRecognizer) {
         
         
         
         let longPressedAtPoint = recognizer.location(in: self.weatherMapView)
-        let longPressedAtCoordinate : CLLocationCoordinate2D = weatherMapView.convert(longPressedAtPoint, toCoordinateFrom: self.weatherMapView) 
+        let longPressedAtCoordinate : CLLocationCoordinate2D = weatherMapView.convert(longPressedAtPoint, toCoordinateFrom: self.weatherMapView)
         
         
         newPin.coordinate = longPressedAtCoordinate
         weatherMapView.addAnnotation(newPin)
-        
-        WeatherWebService().getWeatherForCoordinates(coordinateValue: longPressedAtCoordinate, from: self)
+        let weatherWebServiceObject = WeatherWebService()
+        weatherWebServiceObject.getWeatherForCoordinates(coordinateValue: longPressedAtCoordinate) { (uiValues, error) in
+            self.willUpdateUI(with: uiValues)
+        }
         
         
         
     }
     
-    func updateWeatherValue(weatherModelObject : WeatherModel)  {
-        
-        self.placeName.text = weatherModelObject.placeName
-        self.minTemperature.text = String(format: "%.2f", "\(weatherModelObject.minTemp)")
-        self.maxTemperature.text = String(format: "%.2f", "\(weatherModelObject.maxTemp)")
-        self.weatherStatus.text = weatherModelObject.mainValue
-        self.weatherDescription.text = weatherModelObject.description
-        self.weatherIcon.sd_setShowActivityIndicatorView(true)
-        self.weatherIcon.sd_setImage(with: URL(string: WEATHERICONURL.replacingOccurrences(of: "ICONVALUE", with: ICONVALUE)), placeholderImage: nil, options: .cacheMemoryOnly, completed: nil)
-    }
     
     
+    
+    
+    
+    
+    
+    
+    
+}
+
+extension ViewController : MKMapViewDelegate, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.weatherMapView.removeAnnotation(newPin)
@@ -88,7 +95,24 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         self.weatherMapView.addAnnotation(newPin)
         
     }
+    
+}
 
-
+extension ViewController {
+    func willUpdateUI(with uiValues: [String : Any]) {
+        self.placeName.text = uiValues["placeName"] as? String
+        self.minTemperature.text = String(format: "%.2f", self.convertKelvinToFahrenheit(temperature: uiValues["temp"] as! Double))
+        
+        self.weatherStatus.text = uiValues["status"] as? String
+        self.weatherDescription.text = uiValues["description"] as? String
+        self.weatherIcon.sd_setShowActivityIndicatorView(true)
+        self.weatherIcon.sd_setIndicatorStyle(.gray)
+        self.weatherIcon.sd_setImage(with: URL(string: WEATHERICONURL.replacingOccurrences(of: "ICONVALUE", with: ICONVALUE)), placeholderImage: nil, options: .cacheMemoryOnly, completed: nil)
+    }
+    
+    
+    
+    
+    
 }
 

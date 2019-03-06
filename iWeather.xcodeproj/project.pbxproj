@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4D4830E04A6C63E96AEC4C6A /* Pods_iWeather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE9F24D88848BA402F5E45CF /* Pods_iWeather.framework */; };
+		7AC4635F222FE856002E6D90 /* WebServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC4635E222FE856002E6D90 /* WebServiceManager.swift */; };
 		7AC54EAA2227EE0A00C8E191 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC54EA92227EE0A00C8E191 /* AppDelegate.swift */; };
 		7AC54EAC2227EE0A00C8E191 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC54EAB2227EE0A00C8E191 /* ViewController.swift */; };
 		7AC54EAF2227EE0A00C8E191 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7AC54EAD2227EE0A00C8E191 /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		23CC4A1AA230B7E39137C1BF /* Pods-iWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iWeather.release.xcconfig"; path = "Target Support Files/Pods-iWeather/Pods-iWeather.release.xcconfig"; sourceTree = "<group>"; };
+		7AC4635E222FE856002E6D90 /* WebServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceManager.swift; sourceTree = "<group>"; };
 		7AC54EA62227EE0A00C8E191 /* iWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AC54EA92227EE0A00C8E191 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AC54EAB2227EE0A00C8E191 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +95,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7AC4635D222FE856002E6D90 /* WebServiceManager */ = {
+			isa = PBXGroup;
+			children = (
+				7AC4635E222FE856002E6D90 /* WebServiceManager.swift */,
+			);
+			path = WebServiceManager;
+			sourceTree = "<group>";
+		};
 		7AC54E9D2227EE0900C8E191 = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +128,7 @@
 		7AC54EA82227EE0A00C8E191 /* iWeather */ = {
 			isa = PBXGroup;
 			children = (
+				7AC4635D222FE856002E6D90 /* WebServiceManager */,
 				7AC54ED72227EFF800C8E191 /* WeatherWebService */,
 				7AC54EA92227EE0A00C8E191 /* AppDelegate.swift */,
 				7AC54EAB2227EE0A00C8E191 /* ViewController.swift */,
@@ -350,6 +361,7 @@
 			files = (
 				7AC54EDB2227F48F00C8E191 /* WeatherWebService.swift in Sources */,
 				7AC54EAC2227EE0A00C8E191 /* ViewController.swift in Sources */,
+				7AC4635F222FE856002E6D90 /* WebServiceManager.swift in Sources */,
 				7AC54EAA2227EE0A00C8E191 /* AppDelegate.swift in Sources */,
 				7ADDC80A2228F12F00311C37 /* Constants.swift in Sources */,
 				7ADDC80C2228F3CD00311C37 /* WeatherModel.swift in Sources */,

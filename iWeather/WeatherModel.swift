@@ -8,12 +8,48 @@
 
 import Foundation
 
-class WeatherModel{
+struct WeatherModel:Decodable {
     
-    var minTemp     = 0.0
-    var maxTemp     = 0.0
-    var mainValue   = ""
-    var description = ""
-    var icon        = ""
-    var placeName   = ""
+    let name: String
+    
+    
+    
+    let weather: [WeatherDetails]
+    
+    let main: Main
+    
+    
+    
+    
 }
+
+struct WeatherDetails: Decodable {
+    let description: String
+    let icon: String
+    let id: Int
+    let main: String
+}
+
+
+
+
+struct Main: Decodable {
+    let humidity: Int = 0
+    let pressure: Int = 0
+    let temp: Double
+    let tempMax: Double = 0
+    let tempMin: Double = 0
+    private enum CodingKeys: String, CodingKey {
+        case humidity, pressure, temp, tempMax = "temp_max", tempMin = "temp_min"
+    }
+}
+
+
+
+
+
+
+
+
+
+
