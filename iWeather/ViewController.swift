@@ -18,11 +18,11 @@ class ViewController: UIViewController  {
     @IBOutlet var weatherMapView: MKMapView!
     @IBOutlet var placeName: UILabel!
     @IBOutlet var minTemperature: UILabel!
-    @IBOutlet var maxTemperature: UILabel!
     @IBOutlet var weatherIcon: UIImageView!
     @IBOutlet var weatherStatus: UILabel!
     @IBOutlet var weatherDescription: UILabel!
     
+    @IBOutlet var weatherDetailsView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -35,8 +35,9 @@ class ViewController: UIViewController  {
         
         
         let longPressSelected = UILongPressGestureRecognizer(target: self, action:#selector(ViewController.longPressCall(_:)))
-        longPressSelected.minimumPressDuration = 1
+        longPressSelected.minimumPressDuration = 0.5
         weatherMapView.addGestureRecognizer(longPressSelected)
+        self.weatherDetailsView.isHidden = true
         
         
         
@@ -100,8 +101,9 @@ extension ViewController : MKMapViewDelegate, CLLocationManagerDelegate {
 
 extension ViewController {
     func willUpdateUI(with uiValues: [String : Any]) {
+        self.weatherDetailsView.isHidden = false
         self.placeName.text = uiValues["placeName"] as? String
-        self.minTemperature.text = String(format: "%.2f", self.convertKelvinToFahrenheit(temperature: uiValues["temp"] as! Double))
+        self.minTemperature.text = String(format: "%.1f", self.convertKelvinToFahrenheit(temperature: uiValues["temp"] as! Double))
         
         self.weatherStatus.text = uiValues["status"] as? String
         self.weatherDescription.text = uiValues["description"] as? String
